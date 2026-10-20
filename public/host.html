@@ -1,0 +1,198 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Quiz — Professor</title>
+  <link rel="stylesheet" href="/style.css">
+  <style>
+    .lobby { display: flex; gap: 32px; align-items: center; flex-wrap: wrap; justify-content: center; }
+    .qr { background: #fff; padding: 12px; border-radius: 12px; width: 340px; max-width: 90vw; }
+    .names { display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; max-width: 1000px; max-height: 30vh; overflow: auto; }
+    .names span { background: rgba(255,255,255,.15); padding: 6px 12px; border-radius: 6px; font-weight: 600; }
+    .bars { display: flex; gap: 16px; align-items: flex-end; height: 160px; }
+    .bar { width: 70px; border-radius: 6px 6px 0 0; display: flex; align-items: flex-start; justify-content: center; font-weight: 800; padding-top: 6px; min-height: 30px; }
+    .controls { display: flex; gap: 12px; flex-wrap: wrap; justify-content: center; }
+  </style>
+</head>
+<body>
+  <!-- Login do professor -->
+  <section id="s-auth" class="screen active">
+    <div class="card">
+      <h2>Painel do professor</h2>
+      <input id="key" type="password" placeholder="Senha">
+      <button id="btn-auth" class="btn-main">Entrar</button>
+      <p id="auth-error" style="color:#e21b3c;margin-top:10px"></p>
+    </div>
+  </section>
+
+  <!-- Sala de espera com QR Code -->
+  <section id="s-lobby" class="screen">
+    <div class="lobby">
+      <img id="qr" class="qr" alt="QR Code">
+      <div>
+        <h1>Escaneie para entrar</h1>
+        <p class="muted" id="join-url" style="font-size:1.3rem;margin:8px 0"></p>
+        <h2><span id="count">0</span> participantes</h2>
+      </div>
+    </div>
+    <div class="names" id="names"></div>
+    <button id="btn-start" class="btn-main" style="max-width:320px">Iniciar quiz</button>
+  </section>
+
+  <!-- Pergunta no telão -->
+  <section id="s-question" class="screen">
+    <p class="muted" id="q-counter"></p>
+    <div class="question-text" id="q-text"></div>
+    <div style="display:flex;gap:40px;align-items:center">
+      <div class="timer" id="q-timer"></div>
+      <h2><span id="answered">0</span> / <span id="online">0</span> respostas</h2>
+    </div>
+    <div class="options" id="q-options"></div>
+    <button id="btn-skip">Encerrar pergunta</button>
+  </section>
+
+  <!-- Resultado + ranking -->
+  <section id="s-results" class="screen">
+    <div class="question-text" id="r-text"></div>
+    <div class="bars" id="r-bars"></div>
+    <div class="options" id="r-options"></div>
+    <h2>Ranking</h2>
+    <ol class="ranking" id="r-ranking"></ol>
+    <div class="controls">
+      <button id="btn-next" class="btn-main" style="width:auto">Próxima pergunta</button>
+      <button id="btn-finish">Encerrar quiz</button>
+    </div>
+  </section>
+
+  <!-- Pódio final -->
+  <section id="s-final" class="screen">
+    <h1>🏆 Ranking final</h1>
+    <p class="muted" id="f-total"></p>
+    <ol class="ranking" id="f-ranking"></ol>
+    <button id="btn-reset">Novo jogo (zerar)</button>
+  </section>
+
+  <script src="/socket.io/socket.io.js"></script>
+  <script>
+    const socket = io({ transports: ['websocket', 'polling'] });
+    const $ = id => document.getElementById(id);
+    const SHAPES = ['▲', '◆', '●', '■'];
+    let countdown, authed = false;
+
+    function show(id) {
+      document.querySelectorAll('.screen').forEach(s => s.classList.toggle('active', s.id === id));
+    }
+
+    function renderOptions(box, options, correct) {
+      box.innerHTML = '';
+      options.forEach((txt, i) => {
+        const d = document.createElement('div');
+        d.className = `opt c${i}` + (correct === undefined ? '' : (i === correct ? ' right' : ' dim'));
+        d.innerHTML = `<span class="shape">${SHAPES[i]}</span><span></span>`;
+        d.lastChild.textContent = (correct === i ? '✔ ' : '') + txt;
+        box.appendChild(d);
+      });
+    }
+
+    function renderRanking(ol, top, showGain) {
+      ol.innerHTML = '';
+      top.forEach(p => {
+        const li = document.createElement('li');
+        const left = document.createElement('span');
+        left.textContent = `${p.rank}. ${p.name}`;
+        const right = document.createElement('span');
+        right.textContent = p.score;
+        if (showGain && p.lastPoints) {
+          const g = document.createElement('span');
+          g.className = 'gain';
+          g.textContent = `+${p.lastPoints}`;
+          right.appendChild(g);
+        }
+        li.append(left, right);
+        ol.appendChild(li);
+      });
+    }
+
+    function renderPlayers(p) {
+      $('count').textContent = p.total;
+      $('online').textContent = p.online;
+      const box = $('names');
+      box.innerHTML = '';
+      p.names.forEach(n => { const s = document.createElement('span'); s.textContent = n; box.appendChild(s); });
+    }
+
+    function auth(key) {
+      socket.emit('host:auth', key, res => {
+        if (!res.ok) { $('auth-error').textContent = 'Senha incorreta'; return; }
+        authed = true;
+        sessionStorage.setItem('hostKey', key);
+        $('qr').src = res.qr;
+        $('join-url').textContent = res.url;
+        renderPlayers(res.players);
+        if (res.phase === 'lobby') show('s-lobby');
+      });
+    }
+
+    $('btn-auth').onclick = () => auth($('key').value);
+    $('key').addEventListener('keydown', e => e.key === 'Enter' && $('btn-auth').click());
+    const savedKey = new URLSearchParams(location.search).get('key') || sessionStorage.getItem('hostKey');
+    socket.on('connect', () => { if (savedKey || authed) auth(savedKey || sessionStorage.getItem('hostKey')); });
+
+    $('btn-start').onclick = () => socket.emit('host:next');
+    $('btn-next').onclick = () => socket.emit('host:next');
+    $('btn-skip').onclick = () => socket.emit('host:skip');
+    $('btn-finish').onclick = () => confirm('Encerrar o quiz agora?') && socket.emit('host:finish');
+    $('btn-reset').onclick = () => confirm('Apagar participantes e pontuação?') && socket.emit('host:reset');
+
+    socket.on('players', renderPlayers);
+
+    socket.on('question', q => {
+      show('s-question');
+      $('q-counter').textContent = `Pergunta ${q.index + 1} de ${q.total}`;
+      $('q-text').textContent = q.text;
+      $('answered').textContent = 0;
+      renderOptions($('q-options'), q.options);
+      const end = Date.now() + q.timeLeft;
+      clearInterval(countdown);
+      const tick = () => {
+        const s = Math.max(0, Math.ceil((end - Date.now()) / 1000));
+        $('q-timer').textContent = s;
+        if (s === 0) clearInterval(countdown);
+      };
+      tick();
+      countdown = setInterval(tick, 250);
+    });
+
+    socket.on('answerCount', c => { $('answered').textContent = c.count; $('online').textContent = c.total; });
+
+    socket.on('results', r => {
+      clearInterval(countdown);
+      $('r-text').textContent = r.text;
+      const max = Math.max(1, ...r.distribution);
+      const bars = $('r-bars');
+      bars.innerHTML = '';
+      r.distribution.forEach((n, i) => {
+        const b = document.createElement('div');
+        b.className = `bar c${i}`;
+        b.style.height = `${30 + (n / max) * 130}px`;
+        b.textContent = n;
+        bars.appendChild(b);
+      });
+      renderOptions($('r-options'), r.options, r.correct);
+      renderRanking($('r-ranking'), r.top, true);
+      $('btn-next').textContent = r.isLast ? 'Ver ranking final' : 'Próxima pergunta';
+      $('btn-next').onclick = () => socket.emit(r.isLast ? 'host:finish' : 'host:next');
+      show('s-results');
+    });
+
+    socket.on('final', f => {
+      $('f-total').textContent = `${f.totalPlayers} participantes`;
+      renderRanking($('f-ranking'), f.top, false);
+      show('s-final');
+    });
+
+    socket.on('reset', () => show('s-lobby'));
+  </script>
+</body>
+</html>

@@ -1,0 +1,146 @@
+[
+  {
+    "pergunta": "Anderson, empregado de uma metalúrgica, tem 26 contribuições mensais ininterruptas e foi preso em regime fechado em maio de 2026. Seu último salário de contribuição o enquadrava como segurado de baixa renda. A esposa Júlia e o filho de 7 anos receberam o auxílio-reclusão. Oito meses depois, Anderson progrediu para o regime semiaberto. Júlia sustenta que o benefício continua sendo devido até o fim da pena, pois o direito já havia sido reconhecido.\n\nAssertiva: A tese de Júlia procede, pois, uma vez concedido o auxílio-reclusão, ele é devido até o término da pena, independentemente do regime em que o segurado a cumpra.",
+    "opcoes": [
+      "CERTO",
+      "ERRADO"
+    ],
+    "correta": 1,
+    "tempo": 90
+  },
+  {
+    "pergunta": "Lúcio, empregado de 34 anos, tinha 6 contribuições mensais e estava casado havia 8 meses com Aline, de 29 anos. Ele morreu em um acidente de trânsito. O INSS concedeu a pensão a Aline limitada a 4 meses, argumentando que Lúcio não verteu 18 contribuições nem o casamento completou 2 anos.\n\nAssertiva: A limitação a 4 meses está correta, pois ambos os requisitos (18 contribuições e 2 anos de casamento) não foram cumpridos.",
+    "opcoes": [
+      "CERTO",
+      "ERRADO"
+    ],
+    "correta": 1,
+    "tempo": 90
+  },
+  {
+    "pergunta": "O aposentado por idade Osmar recebia R$ 5.000,00 quando faleceu, deixando como dependentes a viúva Sara e os filhos Pedro (15 anos) e Ana (19 anos), todos habilitados. Dois anos depois, Ana completou 21 anos.\n\nAssertiva: Inicialmente a pensão total é de R$ 4.000,00. Com a cessação da cota de Ana, que não é revertida aos demais, o total passa a R$ 3.500,00, sendo R$ 1.750,00 para Sara e R$ 1.750,00 para Pedro.",
+    "opcoes": [
+      "CERTO",
+      "ERRADO"
+    ],
+    "correta": 0,
+    "tempo": 90
+  },
+  {
+    "pergunta": "Paula, que teve 100 contribuições como empregada, perdeu a qualidade de segurada. Em março de 2026 voltou a contribuir como contribuinte individual e recolheu 5 contribuições (de março a julho). Em agosto de 2026, uma hérnia de disco grave, sem relação com acidente, a incapacitou. Paula afirma que bastaria 1/3 da carência, ou seja, 4 contribuições.\n\nAssertiva: Paula não cumpre a carência para o auxílio por incapacidade temporária, pois, após a perda da qualidade, exigem-se metade das contribuições da carência, contadas a partir da nova filiação.",
+    "opcoes": [
+      "CERTO",
+      "ERRADO"
+    ],
+    "correta": 0,
+    "tempo": 90
+  },
+  {
+    "pergunta": "Heitor foi diagnosticado com neoplasia maligna em 2024. Em março de 2026 filiou-se ao RGPS como empregado e, em julho de 2026, com 4 contribuições, ficou incapacitado em razão da doença, sem prova de agravamento ou progressão posterior à filiação.\n\nAssertiva: Heitor tem direito ao auxílio por incapacidade temporária, pois a neoplasia maligna consta da lista de doenças que dispensam carência.",
+    "opcoes": [
+      "CERTO",
+      "ERRADO"
+    ],
+    "correta": 1,
+    "tempo": 90
+  },
+  {
+    "pergunta": "Joaquim, 67 anos, aposentado por idade pelo RGPS, voltou a trabalhar com carteira assinada em uma padaria. Dois anos depois, uma fratura o incapacitou por 60 dias, e ele requereu auxílio por incapacidade temporária.\n\nAssertiva: Joaquim é segurado obrigatório em relação à nova atividade e deve contribuir. Contudo, por ser aposentado em atividade, não fará jus ao auxílio por incapacidade temporária, restando-lhe apenas o salário-família e a reabilitação profissional.",
+    "opcoes": [
+      "CERTO",
+      "ERRADO"
+    ],
+    "correta": 1,
+    "tempo": 90
+  },
+  {
+    "pergunta": "A Delta Ltda. tem duas sócias cotistas. Renata administra a empresa e recebe pró-labore mensal. Sílvia apenas integralizou capital: não participa da gestão, não recebe pró-labore e não exerce nenhuma outra atividade.\n\nAssertiva: Renata e Sílvia são, ambas, contribuintes individuais obrigatórias do RGPS, pelo simples fato de serem sócias cotistas.",
+    "opcoes": [
+      "CERTO",
+      "ERRADO"
+    ],
+    "correta": 1,
+    "tempo": 90
+  },
+  {
+    "pergunta": "Seu Antônio, agricultor em regime de economia familiar, é segurado especial. Ele recebe pensão por morte de R$ 1.621,00 (um salário mínimo), deixada pela esposa, e trabalhou 90 dias, de forma intercalada, na entressafra como empregado de uma empresa urbana no ano civil de 2026.\n\nAssertiva: Seu Antônio mantém a condição de segurado especial, pois o valor da pensão não supera o menor benefício de prestação continuada e a atividade remunerada na entressafra não excedeu 120 dias no ano civil.",
+    "opcoes": [
+      "CERTO",
+      "ERRADO"
+    ],
+    "correta": 0,
+    "tempo": 90
+  },
+  {
+    "pergunta": "Valdemar, 65 anos, filiou-se ao RGPS em 1998 e soma 27 anos de contribuição. A média de todos os seus salários de contribuição desde julho de 1994, devidamente atualizados, é de R$ 5.000,00. Ele requereu aposentadoria por idade em 2026.\n\nAssertiva: A renda mensal inicial será de 60% mais 2% por ano de contribuição que exceder 20 anos, ou seja ele terá direito a 74% do salário de benefício.",
+    "opcoes": [
+      "CERTO",
+      "ERRADO"
+    ],
+    "correta": 0,
+    "tempo": 90
+  },
+  {
+    "pergunta": "Wilson, soldador filiado em 1998, trabalhou exposto a ruído acima do limite de tolerância de 2003 a 2013 (10 anos) e de 2021 a 2026 (5 anos), tudo comprovado em PPP. Ele não alcançou 25 anos de exposição e quer converter todos os 15 anos de tempo especial em tempo comum, para somar à sua aposentadoria programada.\n\nAssertiva: Todo o período de 15 anos pode ser convertido, pois o direito à conversão do tempo especial em comum permanece integralmente assegurado ao segurado do RGPS.",
+    "opcoes": [
+      "CERTO",
+      "ERRADO"
+    ],
+    "correta": 1,
+    "tempo": 90
+  },
+  {
+    "pergunta": "Marina, contribuinte individual, tinha 8 contribuições mensais quando deu à luz, em 2026, um bebê prematuro, nascido com 7 meses de gestação (parto antecipado em 2 meses). Ela requereu o salário-maternidade.\n\nAssertiva: Marina não cumpre a carência.",
+    "opcoes": [
+      "CERTO",
+      "ERRADO"
+    ],
+    "correta": 1,
+    "tempo": 90
+  },
+  {
+    "pergunta": "Gabriela, empregada doméstica, teve um natimorto com 25 semanas de gestação. Joana, empregada, sofreu aborto espontâneo, comprovado por atestado médico, com 18 semanas. O INSS pagou a Gabriela apenas 30 dias, entendendo que só há salário-maternidade de 120 dias quando o nascimento é com vida. E para Joana pagou o benefício por 2 semanas\n\nAssertiva: A conduta do INSS está correta.",
+    "opcoes": [
+      "CERTO",
+      "ERRADO"
+    ],
+    "correta": 1,
+    "tempo": 90
+  },
+  {
+    "pergunta": "Roberto, empregado, afastou-se do trabalho em 10/05/2026 e requereu o benefício em 02/06/2026. Helena, contribuinte individual, tornou-se incapaz também em 10/05/2026 (DII) e requereu o benefício em 20/06/2026.\n\nAssertiva: O benefício de Roberto será devido a partir de 25/05/2026 e o de Helena a partir de 20/06/2026.",
+    "opcoes": [
+      "CERTO",
+      "ERRADO"
+    ],
+    "correta": 0,
+    "tempo": 90
+  },
+  {
+    "pergunta": "Luiz, empregado, teve o auxílio por incapacidade temporária concedido pelo INSS com salário de benefício de R$ 4.000,00. A perícia não fixou data estimada para a cessação do benefício.\n\nAssertiva: Luiz receberá R$ 4.000,00 mensais, e, não tendo sido fixada data de cessação, o benefício será mantido até a alta médica pela perícia ou a conversão em aposentadoria.",
+    "opcoes": [
+      "CERTO",
+      "ERRADO"
+    ],
+    "correta": 1,
+    "tempo": 90
+  },
+  {
+    "pergunta": "Rafael, empregado com 150 contribuições mensais ininterruptas, sem nunca ter perdido a qualidade de segurado, foi dispensado sem justa causa em 31/03/2026 e permaneceu comprovadamente desempregado. Em 01/12/2028, ficou incapacitado.\n\nAssertiva: Em 01/12/2028 Rafael já havia perdido a qualidade de segurado, pois o período de graça seria de 24 meses, já que a prorrogação por desemprego não se acumula com a prorrogação por mais de 120 contribuições.",
+    "opcoes": [
+      "CERTO",
+      "ERRADO"
+    ],
+    "correta": 1,
+    "tempo": 90
+  },
+  {
+    "pergunta": "Sandra trabalha em dois empregos de jornada parcial. A soma de suas remunerações foi de R$ 1.000,00 em janeiro/2026 e de R$ 2.800,00 em fevereiro/2026. O salário mínimo é de R$ 1.621,00.\n\nAssertiva: Utilizando o excedente de fevereiro em favor de janeiro, essa competência poderia ser considerada para fins de carência e tempo de contribuição.",
+    "opcoes": [
+      "CERTO",
+      "ERRADO"
+    ],
+    "correta": 0,
+    "tempo": 90
+  }
+]

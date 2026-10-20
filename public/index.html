@@ -1,0 +1,146 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Quiz ao vivo</title>
+  <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+  <!-- 1. Nome -->
+  <section id="s-join" class="screen active">
+    <div class="card">
+      <h2>Entrar no quiz</h2>
+      <input id="name" maxlength="20" placeholder="Seu nome" autocomplete="off">
+      <button id="btn-join" class="btn-main">Entrar</button>
+      <p id="join-error" style="color:#e21b3c;margin-top:10px"></p>
+    </div>
+  </section>
+
+  <!-- 2. Aguardando -->
+  <section id="s-wait" class="screen">
+    <h1 id="wait-title">Você está dentro!</h1>
+    <p class="muted" id="wait-msg">Aguarde o professor iniciar...</p>
+    <p class="muted" id="me-name"></p>
+  </section>
+
+  <!-- 3. Pergunta -->
+  <section id="s-question" class="screen">
+    <p class="muted" id="q-counter"></p>
+    <div class="timer" id="q-timer"></div>
+    <div class="question-text" id="q-text"></div>
+    <div class="options" id="q-options"></div>
+  </section>
+
+  <!-- 4. Resultado da pergunta -->
+  <section id="s-result" class="screen">
+    <div class="big" id="r-icon"></div>
+    <h1 id="r-title"></h1>
+    <p id="r-points"></p>
+    <h2 id="r-rank"></h2>
+    <p class="muted" id="r-correct"></p>
+  </section>
+
+  <!-- 5. Final -->
+  <section id="s-final" class="screen">
+    <div class="big">🏆</div>
+    <h1 id="f-rank"></h1>
+    <h2 id="f-score"></h2>
+    <p class="muted">Obrigado por participar!</p>
+  </section>
+
+  <script src="/socket.io/socket.io.js"></script>
+  <script>
+    const socket = io({ transports: ['websocket', 'polling'] });
+    const $ = id => document.getElementById(id);
+    const SHAPES = ['▲', '◆', '●', '■'];
+    let me = JSON.parse(localStorage.getItem('quizPlayer') || 'null');
+    let countdown;
+
+    function show(id) {
+      document.querySelectorAll('.screen').forEach(s => s.classList.toggle('active', s.id === id));
+    }
+
+    function join(name) {
+      socket.emit('join', { id: me && me.id, name }, res => {
+        if (res.error) { $('join-error').textContent = res.error; show('s-join'); return; }
+        me = { id: res.id, name: res.name };
+        localStorage.setItem('quizPlayer', JSON.stringify(me));
+        $('me-name').textContent = res.name;
+        if (res.phase !== 'question') show('s-wait');
+      });
+    }
+
+    $('btn-join').onclick = () => {
+      const name = $('name').value.trim();
+      if (!name) return $('name').focus();
+      me = null;
+      join(name);
+    };
+    $('name').addEventListener('keydown', e => e.key === 'Enter' && $('btn-join').click());
+
+    // Reconecta automaticamente se a página recarregar ou a conexão cair
+    socket.on('connect', () => { if (me) join(me.name); });
+
+    socket.on('question', q => {
+      show('s-question');
+      $('q-counter').textContent = `Pergunta ${q.index + 1} de ${q.total}`;
+      $('q-text').textContent = q.text;
+      const box = $('q-options');
+      box.innerHTML = '';
+      q.options.forEach((txt, i) => {
+        const b = document.createElement('button');
+        b.className = `opt c${i}`;
+        b.innerHTML = `<span class="shape">${SHAPES[i]}</span><span></span>`;
+        b.lastChild.textContent = txt;
+        b.onclick = () => answer(i, b);
+        box.appendChild(b);
+      });
+      const end = Date.now() + q.timeLeft;
+      clearInterval(countdown);
+      const tick = () => {
+        const s = Math.max(0, Math.ceil((end - Date.now()) / 1000));
+        $('q-timer').textContent = s;
+        if (s === 0) clearInterval(countdown);
+      };
+      tick();
+      countdown = setInterval(tick, 250);
+    });
+
+    function answer(i, btn) {
+      document.querySelectorAll('#q-options .opt').forEach(b => { b.disabled = true; if (b !== btn) b.classList.add('dim'); });
+      socket.emit('answer', i, () => {
+        clearInterval(countdown);
+        $('wait-title').textContent = 'Resposta enviada!';
+        $('wait-msg').textContent = 'Aguardando os outros participantes...';
+        show('s-wait');
+      });
+    }
+
+    socket.on('myResult', r => {
+      clearInterval(countdown);
+      const s = $('s-result');
+      s.classList.remove('ok', 'bad');
+      s.classList.add(r.correct ? 'ok' : 'bad');
+      $('r-icon').textContent = r.correct ? '✔' : '✖';
+      $('r-title').textContent = r.correct ? 'Correto!' : (r.answered ? 'Incorreto' : 'Tempo esgotado');
+      $('r-points').textContent = `+${r.points} pontos · Total: ${r.score}`;
+      $('r-rank').textContent = `Você está em ${r.rank}º de ${r.totalPlayers}`;
+      $('r-correct').textContent = r.correct ? '' : `Resposta certa: ${r.correctText}`;
+      show('s-result');
+    });
+
+    socket.on('final', r => {
+      $('f-rank').textContent = `${r.rank}º lugar de ${r.totalPlayers}`;
+      $('f-score').textContent = `${r.score} pontos`;
+      show('s-final');
+    });
+
+    socket.on('reset', () => {
+      localStorage.removeItem('quizPlayer');
+      me = null;
+      show('s-join');
+    });
+  </script>
+</body>
+</html>
